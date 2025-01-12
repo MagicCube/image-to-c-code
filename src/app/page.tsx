@@ -86,7 +86,7 @@ export default function HomePage() {
         </h1>
         <div>Paste a image and convert it to C code</div>
         <div>
-          <img src={base64} alt="" style={{ width: 360, height: 360 }} />
+          <img src={base64} alt="" />
         </div>
         <div>
           <input
@@ -128,7 +128,7 @@ function convertImageToRGB565(
 }
 
 function generateCode(name: string, image_16bit: Uint8Array) {
-  const code = `#pragma once\n\n#include <Arduino.h>\n\nconst uint8_t ${name}_map[] PROGMEM = {
+  const code = `#pragma once\n\n#include <Arduino.h>\n#include <pgmspace.h>\n\nconst uint8_t ${name}_map[] PROGMEM = {
     ${Array.from(image_16bit)
       .map((v) => "0x" + v.toString(16).padStart(2, "0"))
       .join(", ")}
