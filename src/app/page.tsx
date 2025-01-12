@@ -21,7 +21,6 @@ export default function HomePage() {
 
     // Get the raw image data of the canvas
     const imageData = ctx.getImageData(0, 0, width, height);
-    console.info(imageData);
     // Get a byte array of the image data
     const image_rgba = new Uint8Array(imageData.data.length);
     for (let i = 0; i < imageData.data.length; i++) {
@@ -52,8 +51,6 @@ export default function HomePage() {
           canvas.height = image.height;
           const ctx = canvas.getContext("2d")!;
           contextRef.current = ctx;
-          ctx.translate(image.width, image.height);
-          ctx.rotate(Math.PI);
           ctx.drawImage(image, 0, 0);
           const base64 = canvas.toDataURL("image/png");
           setBase64(base64);
