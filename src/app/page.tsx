@@ -12,6 +12,28 @@ export default function HomePage() {
   const [height, setHeight] = useState(0);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
+  const handleDownload = useCallback(() => {
+    if (!contextRef.current) return;
+
+    const ctx = contextRef.current;
+
+    // Get the raw image data of the canvas
+    const imageData = ctx.getImageData(0, 0, width, height);
+    // Get a byte array of the image data
+    const image_rgba = new Uint8Array(imageData.data.length);
+    for (let i = 0; i < imageData.data.length; i++) {
+      image_rgba[i] = imageData.data[i]!;
+    }
+    const image_16bit = convertImageToRGB565(image_rgba, width, height);
+
+    const blob = new Blob([image_16bit], { type: "image/bin" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name + ".bin";
+    a.click();
+  }, [name, width, height]);
+
   const handleCopy = useCallback(() => {
     if (!contextRef.current) return;
 
@@ -95,7 +117,8 @@ export default function HomePage() {
             }}
           />
         </div>
-        <div>
+        <div className="flex gap-4">
+          <button onClick={handleDownload}>Download .bin</button>
           <button onClick={handleCopy}>Copy as C Code</button>
         </div>
       </div>
